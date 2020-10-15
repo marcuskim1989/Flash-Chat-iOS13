@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Firebase
+
 
 class LoginViewController: UIViewController {
 
@@ -15,6 +17,23 @@ class LoginViewController: UIViewController {
     
 
     @IBAction func loginPressed(_ sender: UIButton) {
+        
+        let alert = UIAlertController(title: "Invalid Email/Password Combination", message: "Please try again", preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: "Okay", style: .cancel, handler: nil))
+
+        
+        if let email = emailTextfield.text, let password = passwordTextfield.text {
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
+            if let e = error {
+                print(e.localizedDescription)
+                
+                self?.present(alert, animated: true, completion: nil)
+            } else {
+                self?.performSegue(withIdentifier: "LoginToChat", sender: self)
+            }
+            }
+        }
     }
     
 }
