@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Firebase
+
 
 class RegisterViewController: UIViewController {
 
@@ -14,6 +16,25 @@ class RegisterViewController: UIViewController {
     @IBOutlet weak var passwordTextfield: UITextField!
     
     @IBAction func registerPressed(_ sender: UIButton) {
+        
+        let alert = UIAlertController(title: "Invalid Password", message: "Passwords must be at least 6 alphanumeric characters", preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: "Okay", style: .cancel, handler: nil))
+
+        
+        
+        if let email = emailTextfield.text, let password = passwordTextfield.text {
+            Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+                if let e = error {
+                    print(e.localizedDescription)
+                    self.present(alert, animated: true)
+                } else {
+                    // navigate to the chat view controller
+                    
+                    self.performSegue(withIdentifier: "RegisterToChat", sender: self)
+                }
+            }
+        }
     }
     
 }
